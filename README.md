@@ -5,8 +5,7 @@ embedded cover art (from the folder or iTunes) and Finder icons.
 
 ## Install
 
-    brew tap AnthonyRosato08/flacfix https://github.com/AnthonyRosato08/FlacFix
-    brew install AnthonyRosato08/flacfix/flacfix
+    brew tap AnthonyRosato08/flacfix https://github.com/AnthonyRosato08/FlacFix && brew install AnthonyRosato08/flacfix/flacfix
 
 Then run `FlacFix` for the help screen, or `FlacFix ~/Music/SomeArtist`.
 See `FlacFix-Guide.txt` (installed under `$(brew --prefix)/share/flacfix/`).
