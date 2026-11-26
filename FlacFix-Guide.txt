@@ -1,0 +1,151 @@
+FLACFIX - USER GUIDE
+====================
+
+FlacFix tidies a folder of FLAC albums in one go: it fixes the metadata,
+cleans up the track names, embeds cover art and gives every file a
+cover-art icon in Finder.
+
+
+QUICK START
+-----------
+1. Open Terminal.
+2. Type FlacFix on its own to see the help screen (version, usage, options).
+3. Run it on a folder. Type FlacFix, a space, then drag the folder from Finder
+   into the Terminal window (that pastes its path), and press Enter:
+
+       FlacFix ~/Desktop/"Ed Sheeran"
+
+   (Put quotes around folder names that contain spaces.)
+4. Type the artist name if it isn't right (press Enter to accept the suggestion).
+5. Read the list of changes FlacFix shows you, then press Enter (or type y) to
+   go ahead. Type n to cancel - nothing is touched until you confirm.
+
+
+WHAT KIND OF FOLDER TO PICK
+---------------------------
+- ARTIST FOLDER: a folder that contains album folders full of .flac files
+  (for example "Ed Sheeran" containing "Divide", "Play", ...). The artist name
+  defaults to the folder's name.
+- ALBUM FOLDER: a single folder that contains .flac files. The artist name
+  defaults to the name of the folder it sits in.
+
+
+WHAT IT DOES
+------------
+For every track that hasn't been processed yet:
+
+ 1. METADATA
+    - Artist = the artist, plus any featured artists (see below)
+    - Album Artist = the artist
+    - Album = the name of the folder the track is in
+    - Title = the cleaned-up track name
+    Track numbers, disc numbers, year, genre and lyrics are left as they are.
+
+ 2. TRACK NAMES (file name and Title tag are kept identical)
+    - "(Bonus Track)" and "- Bonus Track" are removed.
+    - "(feat. X)", "(ft. X)", "(featuring X)" and "(with X)" are removed from
+      the name, and X is added to the Artist tag instead.
+      Example:  Feels (feat. Young Thug & J Hus)
+                -> name "Feels", Artist "Ed Sheeran, Young Thug, J Hus"
+    - Anything after "- Live" is cut down to "- Live", and "(Live ...)" becomes
+      "- Live".
+      Example:  Fall - Live at the Bedford  ->  Fall - Live
+                Shape of You (Live)         ->  Shape of You - Live
+    - A trailing "- + Name" is removed. Other endings such as
+      "- Bravado Dubstep Remix" or "[Remix]" are kept.
+    - If two tracks would end up with the same name, the second becomes
+      "- V2" (or "- Live V2" for live tracks), then V3, and so on.
+
+ 3. COVER ART (resized to at most 1200 x 1200 pixels, JPEG)
+    a. If the album folder contains an image (.jpg / .jpeg / .png), that is used.
+    b. Otherwise, if some tracks in the folder were processed before, their
+       cover art is reused.
+    c. Otherwise FlacFix searches the iTunes API for the album (it matches on
+       your track titles, so "Add" finds "+") and downloads the biggest cover
+       available. It prints which iTunes album it chose - check it looks right.
+    The cover is embedded in every track.
+
+ 4. FINDER ICONS
+    Each FLAC gets an icon that looks like its album cover, with small rounded
+    corners.
+
+ 5. CLEAN UP
+    The cover image file that was used is moved to the Trash (it is deleted
+    outright if the Trash can't be used). Other images in the folder are left
+    alone.
+
+ 6. LYRICS CHECK
+    At the end FlacFix lists any track that has no lyrics. It does not download
+    lyrics for you.
+
+
+RUNNING IT AGAIN (NOTHING IS REDONE)
+------------------------------------
+Every finished track is stamped with a hidden tag, FLACFIX=1. On later runs
+those tracks are skipped, so it is safe to run FlacFix on the same folder as
+often as you like. If you add new tracks, only the new ones are processed.
+
+A track is only stamped once it has cover art. If a cover couldn't be found or
+downloaded, the track is picked up again next time.
+
+
+OPTIONS
+-------
+  FlacFix <folder> [options]
+
+  Option names are case-sensitive: write them exactly as shown.
+
+  --Help            Show the help screen and exit.
+  --Artist [name]   Set the artist name yourself.
+                    Example: FlacFix ~/Music/Adele --Artist "Adele"
+  --Convert [old] [new]
+                    Rename one track: its file name and its title tag. Give the
+                    current name, then the new one (quotes if they have spaces).
+                    Nothing else is processed. It matches the whole name, ignoring
+                    capitals, in every album under the folder, and asks before it
+                    changes anything. It stops if the new name already exists.
+                    Example: FlacFix ~/Desktop/"Ed Sheeran" --Convert "Drunk" "Drunk (Remastered)"
+  --Force           Redo tracks that were already processed.
+  --NoIcons         Don't set Finder icons.
+  --NoDownload      Never fetch covers from the internet.
+  --NoWith          Don't treat "(with X)" as a featured artist. Use this if a
+                    song is really called something like "Song (With You)".
+
+Handy combinations:
+  FlacFix ~/Music/SomeArtist --Force        Redo everything in the folder.
+  FlacFix ~/Music/SomeArtist --NoDownload   Only use covers already in the folder.
+
+Fixed behaviour (no options): covers are embedded at up to 1200 x 1200 pixels,
+and FlacFix always shows the changes and asks you to confirm before touching
+anything. By default "(with X)" counts as a featured artist (see --NoWith).
+
+
+TIPS
+----
+- Always glance at the preview before pressing Enter - especially the track
+  renames and the iTunes album that was picked.
+- If Finder icons look out of date, type:   killall Finder
+- Copies of your music are the safest way to try a new library the first time.
+- Renamed files, changed tags and embedded covers can't be automatically
+  undone, so keep a backup of anything precious.
+- Icons are stored in extra data attached to each file. If you copy files to a
+  drive that isn't formatted for Mac, the custom icons may not come along.
+
+
+FILES AND UNINSTALLING
+----------------------
+  ~/.local/bin/FlacFix                 the command
+  ~/.local/share/flacfix/              the program, its Python environment,
+                                       the icon helper and this guide
+
+To uninstall, delete those two locations:
+
+  rm ~/.local/bin/FlacFix
+  rm -r ~/.local/share/flacfix
+
+
+REQUIREMENTS
+------------
+macOS with the Xcode command line tools (already present - used for the icon
+helper), an internet connection for iTunes cover downloads, and the Python
+packages FlacFix installed into its own environment (mutagen, certifi).
