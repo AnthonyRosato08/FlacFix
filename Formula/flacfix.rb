@@ -3,8 +3,8 @@ class Flacfix < Formula
 
   desc "Tidy FLAC albums: tags, track names, cover art and Finder icons"
   homepage "https://github.com/AnthonyRosato08/FlacFix"
-  url "https://github.com/AnthonyRosato08/FlacFix.git", tag: "v1.0"
-  version "1.0"
+  url "https://github.com/AnthonyRosato08/FlacFix.git", tag: "v1.1"
+  version "1.1"
   license "MIT"
 
   depends_on :macos
@@ -40,6 +40,7 @@ class Flacfix < Formula
   test do
     assert_match "FlacFix Version", shell_output("#{bin}/FlacFix")
     assert_match "--Convert", shell_output("#{bin}/FlacFix")
+    assert_match "FlacFix Version 1.1", shell_output("#{bin}/FlacFix --Version")
     assert_predicate libexec/"seticon", :executable?
   end
 end

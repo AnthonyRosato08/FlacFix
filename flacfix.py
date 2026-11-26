@@ -46,10 +46,11 @@ def rule():
     print("\n" + "_" * width + "\n")
 
 
-VERSION = "1.0"
+VERSION = "1.1"
 LINE_WIDTH = 60
 OPTIONS = [
     ("--Help", "", "Show this help message and exit."),
+    ("--Version", "", "Show the version number and exit."),
     ("--Artist", "[name]", "Enter the Artist Name as an argument."),
     ("--Convert", "[old] [new]", "Rename one track (file and title) to a new name."),
     ("--Force", "", "Redo tracks that were already processed."),
@@ -441,6 +442,7 @@ def main():
     ap = Parser(prog="FlacFix", add_help=False, allow_abbrev=False)
     ap.add_argument("folder", nargs="?")
     ap.add_argument("--Help", dest="help", action="store_true")
+    ap.add_argument("--Version", dest="version", action="store_true")
     ap.add_argument("--Artist", dest="artist", metavar="name")
     ap.add_argument("--Convert", dest="convert", nargs=2, metavar=("old", "new"))
     ap.add_argument("--Force", dest="force", action="store_true")
@@ -448,6 +450,9 @@ def main():
     ap.add_argument("--NoDownload", dest="no_download", action="store_true")
     ap.add_argument("--NoWith", dest="no_with", action="store_true")
     args = ap.parse_args()
+    if args.version:
+        print(f"FlacFix Version {VERSION}")
+        return
     if args.help or not args.folder:
         show_help()
         return

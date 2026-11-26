@@ -96,6 +96,7 @@ OPTIONS
   Option names are case-sensitive: write them exactly as shown.
 
   --Help            Show the help screen and exit.
+  --Version         Show the version number and exit.
   --Artist [name]   Set the artist name yourself.
                     Example: FlacFix ~/Music/Adele --Artist "Adele"
   --Convert [old] [new]
