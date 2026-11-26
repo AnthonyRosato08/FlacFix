@@ -1,4 +1,6 @@
 class Flacfix < Formula
+  include Language::Python::Virtualenv
+
   desc "Tidy FLAC albums: tags, track names, cover art and Finder icons"
   homepage "https://github.com/OWNER/homebrew-flacfix"
   url "https://github.com/OWNER/homebrew-flacfix.git", tag: "v1.0"
